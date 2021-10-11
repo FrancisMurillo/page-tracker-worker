@@ -1,0 +1,25 @@
+name = "page-tracker-worker"
+type = "javascript"
+workers_dev = true
+compatibility_date = "2021-10-10"
+compatibility_flags = [ "formdata_parser_supports_files" ] # required
+
+# Update based on your credentials
+kv_namespaces = [
+  { binding = "PAGE_COUNTER", id = "PROD_ID", preview_id = "PREVIEW_ID" }
+]
+
+[vars]
+WORKERS_RS_VERSION = "0.0.6"
+
+[build]
+command = "cargo install -q worker-build && worker-build --release" # required
+
+[build.upload]
+dir    = "build/worker"
+format = "modules"
+main   = "./shim.mjs"
+
+[[build.upload.rules]]
+globs = ["**/*.wasm"]
+type  = "CompiledWasm"
